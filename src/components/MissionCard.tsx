@@ -7,9 +7,10 @@ interface MissionCardProps {
   task: Task;
   today: string;
   onToggle: (id: number) => void;
+  onOpen: (task: Task) => void;
 }
 
-export function MissionCard({ task, today, onToggle }: MissionCardProps) {
+export function MissionCard({ task, today, onToggle, onOpen }: MissionCardProps) {
   const dueLabel =
     task.done && task.dueDate ? formatShortDate(task.dueDate) : getDueLabel(task.dueDate, today);
 
@@ -28,18 +29,18 @@ export function MissionCard({ task, today, onToggle }: MissionCardProps) {
         </span>
       </button>
 
-      <div className="mission-body">
-        <h2 className={`mission-title${task.done ? ' mission-title--done' : ''}`}>{task.title}</h2>
-        <div className="mission-divider" />
-        <div className="mission-meta">
+      <button className="mission-body" type="button" onClick={() => onOpen(task)}>
+        <span className={`mission-title${task.done ? ' mission-title--done' : ''}`}>{task.title}</span>
+        <span className="mission-divider" />
+        <span className="mission-meta">
           {task.tags.map((tag) => (
             <span className="tag" key={tag}>
               {tag}
             </span>
           ))}
           <span className="mission-due">{dueLabel}</span>
-        </div>
-      </div>
+        </span>
+      </button>
 
       <PriorityBadge priority={task.priority} />
     </article>
