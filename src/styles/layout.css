@@ -70,26 +70,6 @@ body {
   transform: translateX(-50%);
 }
 
-.app-placeholder {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  text-align: center;
-}
-
-.app-placeholder .title {
-  font-size: 24px;
-}
-
-.app-placeholder-icons {
-  display: flex;
-  gap: 14px;
-}
-
 @media (max-width: 480px) {
   .phone-frame {
     width: 100%;

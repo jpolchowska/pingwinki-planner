@@ -1,0 +1,185 @@
+{
+  "wersja": 1,
+  "zadania": [
+    {
+      "id": 1,
+      "tytul": "Kolokwium z komunikacji w biznesie",
+      "opis": "Feedback i aktywne słuchanie, rozdziały 3–5",
+      "termin": "2026-11-23",
+      "priorytet": "wysoki",
+      "wykonane": false,
+      "tagi": ["studia"]
+    },
+    {
+      "id": 2,
+      "tytul": "Prezentacja po angielsku o pomyśle na firmę",
+      "opis": "5 minut, luźno i z jednym dobrym przykładem",
+      "termin": "2026-11-27",
+      "priorytet": "wysoki",
+      "wykonane": false,
+      "tagi": ["studia", "projekt"]
+    },
+    {
+      "id": 3,
+      "tytul": "Esej o pracy w międzynarodowym zespole",
+      "opis": "1500 słów, dwa przykłady z życia",
+      "termin": "2026-11-18",
+      "priorytet": "sredni",
+      "wykonane": false,
+      "tagi": ["studia"]
+    },
+    {
+      "id": 4,
+      "tytul": "Kolokwium z Business English",
+      "opis": "Maile, spotkania i small talk",
+      "termin": "2026-11-25",
+      "priorytet": "wysoki",
+      "wykonane": false,
+      "tagi": ["studia"]
+    },
+    {
+      "id": 5,
+      "tytul": "Przygotować ofertę warsztatów dla koła naukowego",
+      "opis": "Jedna strona, prosto i konkretnie",
+      "termin": "2026-11-24",
+      "priorytet": "sredni",
+      "wykonane": false,
+      "tagi": ["projekt"]
+    },
+    {
+      "id": 6,
+      "tytul": "Napisać maila z podziękowaniem po hiszpańsku",
+      "opis": "Krótko i ciepło",
+      "termin": "2026-11-26",
+      "priorytet": "niski",
+      "wykonane": false,
+      "tagi": ["studia"]
+    },
+    {
+      "id": 7,
+      "tytul": "Case study: ta sama marka w trzech krajach",
+      "opis": "Wybrać ulubioną markę i porównać reklamy",
+      "termin": "2026-12-02",
+      "priorytet": "wysoki",
+      "wykonane": false,
+      "tagi": ["studia", "projekt"]
+    },
+    {
+      "id": 8,
+      "tytul": "Zapisać się na egzamin C1 z angielskiego",
+      "opis": "",
+      "termin": null,
+      "priorytet": "sredni",
+      "wykonane": false,
+      "tagi": ["kariera"]
+    },
+    {
+      "id": 9,
+      "tytul": "Zaplanować wieczór kultur z kołem naukowym",
+      "opis": "Jedzenie, muzyka i quiz o krajach",
+      "termin": "2026-12-04",
+      "priorytet": "sredni",
+      "wykonane": false,
+      "tagi": ["studia", "projekt"]
+    },
+    {
+      "id": 10,
+      "tytul": "Powtórzyć fiszki: 30 idiomów biznesowych",
+      "opis": "",
+      "termin": "2026-11-22",
+      "priorytet": "niski",
+      "wykonane": false,
+      "tagi": ["studia"]
+    },
+    {
+      "id": 11,
+      "tytul": "Odświeżyć CV po angielsku",
+      "opis": "Dodać projekt zespołowy i języki",
+      "termin": "2026-11-30",
+      "priorytet": "sredni",
+      "wykonane": false,
+      "tagi": ["kariera"]
+    },
+    {
+      "id": 12,
+      "tytul": "Wysłać zgłoszenie na Erasmus+",
+      "opis": "List motywacyjny i wybór uczelni",
+      "termin": "2026-12-10",
+      "priorytet": "wysoki",
+      "wykonane": false,
+      "tagi": ["kariera"]
+    },
+    {
+      "id": 13,
+      "tytul": "Przećwiczyć prezentację z grupą",
+      "opis": "Jedna próba przed zajęciami",
+      "termin": "2026-11-26",
+      "priorytet": "niski",
+      "wykonane": false,
+      "tagi": ["studia"]
+    },
+    {
+      "id": 14,
+      "tytul": "Nagrać krótką autoprezentację po angielsku",
+      "opis": "60 sekund, z uśmiechem",
+      "termin": null,
+      "priorytet": "niski",
+      "wykonane": false,
+      "tagi": ["kariera"]
+    },
+    {
+      "id": 15,
+      "tytul": "Obejrzeć webinar o dobrej atmosferze w zespole",
+      "opis": "",
+      "termin": "2026-12-06",
+      "priorytet": "niski",
+      "wykonane": false,
+      "tagi": []
+    },
+    {
+      "id": 16,
+      "tytul": "Zakupy na tydzień",
+      "opis": "",
+      "termin": "2026-11-22",
+      "priorytet": "niski",
+      "wykonane": false,
+      "tagi": ["dom"]
+    },
+    {
+      "id": 17,
+      "tytul": "Oddać książki o komunikacji do biblioteki",
+      "opis": "",
+      "termin": "2026-11-28",
+      "priorytet": "niski",
+      "wykonane": false,
+      "tagi": []
+    },
+    {
+      "id": 18,
+      "tytul": "Opłacić akademik",
+      "opis": "",
+      "termin": "2026-11-30",
+      "priorytet": "sredni",
+      "wykonane": false,
+      "tagi": ["dom"]
+    },
+    {
+      "id": 19,
+      "tytul": "Quiz z savoir-vivre w biznesie",
+      "opis": "",
+      "termin": "2026-11-19",
+      "priorytet": "sredni",
+      "wykonane": true,
+      "tagi": ["studia"]
+    },
+    {
+      "id": 20,
+      "tytul": "Spotkanie zespołu: kto co robi w projekcie",
+      "opis": "Pół godziny przy kawie",
+      "termin": "2026-11-20",
+      "priorytet": "sredni",
+      "wykonane": true,
+      "tagi": ["projekt"]
+    }
+  ]
+}

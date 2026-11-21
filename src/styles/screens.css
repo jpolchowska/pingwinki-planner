@@ -1,0 +1,85 @@
+.screen {
+  flex: 1;
+  min-height: 0;
+  padding: 70px 16px 28px;
+  overflow-y: auto;
+}
+
+.screen-title {
+  margin-bottom: 16px;
+  font-size: 26px;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-drop {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 150px;
+  padding: 16px;
+  border: 3px dashed var(--color-yellow);
+  border-radius: 10px;
+  background: transparent;
+  color: #fff;
+}
+
+.file-drop-title {
+  font-size: 17px;
+  text-transform: uppercase;
+}
+
+.file-drop-hint {
+  color: var(--color-peach-light);
+  font-family: var(--font-body);
+}
+
+.file-status {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.file-status--success {
+  border: var(--border);
+  background: var(--color-yellow);
+  box-shadow: var(--shadow);
+  color: var(--color-ink);
+}
+
+.file-status--error {
+  border: 3px solid #fff;
+  color: #fff;
+}
+
+.file-save {
+  width: 100%;
+  min-height: 62px;
+  margin-top: 24px;
+  font-size: 18px;
+}
+
+.file-count {
+  margin: 18px 0 0;
+  color: var(--color-peach-light);
+  text-align: center;
+}
+
+.file-penguin {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+@media (max-width: 480px) {
+  .screen {
+    padding-top: calc(env(safe-area-inset-top) + 20px);
+  }
+}
