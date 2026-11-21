@@ -16,6 +16,11 @@ interface FileStatus {
   message: string;
 }
 
+interface PendingImport {
+  fileName: string;
+  tasks: Task[];
+}
+
 function formatMissionCount(count: number) {
   const lastDigit = count % 10;
   const lastTwoDigits = count % 100;
@@ -30,15 +35,17 @@ function formatMissionCount(count: number) {
 export function FileScreen({ tasks, isLoading, onImport }: FileScreenProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [status, setStatus] = useState<FileStatus | null>(null);
+  const [pendingImport, setPendingImport] = useState<PendingImport | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
-  const importFile = async (file: File) => {
+  const selectFile = async (file: File) => {
+    setStatus(null);
     try {
-      const importedTasks = parseTaskFile(await file.text());
-      onImport(importedTasks);
-      setStatus({ type: 'success', message: `Wczytano ${formatMissionCount(importedTasks.length)}` });
+      setPendingImport({ fileName: file.name, tasks: parseTaskFile(await file.text()) });
     } catch (error) {
       const message =
         error instanceof TaskFileError ? error.message : 'Nie udało się odczytać pliku.';
+      setPendingImport(null);
       setStatus({ type: 'error', message: `Nie udało się wczytać pliku. ${message}` });
     }
   };
@@ -46,18 +53,34 @@ export function FileScreen({ tasks, isLoading, onImport }: FileScreenProps) {
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     event.target.value = '';
-    if (file) void importFile(file);
+    if (file) void selectFile(file);
+  };
+
+  const handleDragOver = (event: DragEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setIsDragging(true);
   };
 
   const handleDrop = (event: DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    setIsDragging(false);
     const file = event.dataTransfer.files[0];
-    if (file) void importFile(file);
+    if (file) void selectFile(file);
+  };
+
+  const confirmImport = () => {
+    if (!pendingImport) return;
+    onImport(pendingImport.tasks);
+    setStatus({
+      type: 'success',
+      message: `Wczytano ${formatMissionCount(pendingImport.tasks.length)}!`,
+    });
+    setPendingImport(null);
   };
 
   const handleSave = () => {
     downloadTaskFile(tasks);
-    setStatus({ type: 'success', message: `Zapisano ${formatMissionCount(tasks.length)}` });
+    setStatus({ type: 'success', message: `Pobrano ${formatMissionCount(tasks.length)}!` });
   };
 
   return (
@@ -73,16 +96,40 @@ export function FileScreen({ tasks, isLoading, onImport }: FileScreenProps) {
         onChange={handleFileChange}
       />
       <button
-        className="file-drop"
+        className={`file-drop${isDragging ? ' file-drop--dragging' : ''}`}
         type="button"
         onClick={() => inputRef.current?.click()}
-        onDragOver={(event) => event.preventDefault()}
+        onDragOver={handleDragOver}
+        onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
       >
         <Icon name="file" />
-        <span className="file-drop-title">Wczytaj misje z pliku JSON</span>
+        <span className="file-drop-title">
+          {pendingImport ? 'Wybierz inny plik' : 'Wybierz plik JSON'}
+        </span>
         <span className="file-drop-hint">Przeciągnij plik tutaj albo dotknij</span>
       </button>
+
+      {pendingImport && (
+        <section className="card file-preview" aria-label="Wybrany plik">
+          <p className="file-preview-name">{pendingImport.fileName}</p>
+          <div className="card-divider" />
+          <p className="file-preview-text">Znaleziono: {formatMissionCount(pendingImport.tasks.length)}</p>
+          <p className="file-preview-text">Wczytanie zastąpi obecną listę.</p>
+          <div className="field-row file-preview-actions">
+            <button
+              className="button button--secondary sheet-action"
+              type="button"
+              onClick={() => setPendingImport(null)}
+            >
+              Anuluj
+            </button>
+            <button className="button sheet-action sheet-action--primary" type="button" onClick={confirmImport}>
+              Wczytaj misje
+            </button>
+          </div>
+        </section>
+      )}
 
       {status && (
         <div
@@ -94,7 +141,7 @@ export function FileScreen({ tasks, isLoading, onImport }: FileScreenProps) {
       )}
 
       <button className="button file-save" type="button" disabled={isLoading} onClick={handleSave}>
-        Zapisz misje do pliku JSON
+        Pobierz plik z misjami
       </button>
 
       <p className="file-count">
