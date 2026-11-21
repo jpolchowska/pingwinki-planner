@@ -1,0 +1,2 @@
+# pingwinki-planner
+SmartApp
