@@ -4,6 +4,7 @@ import { PhoneFrame } from './components/PhoneFrame';
 import { TaskSheet } from './components/TaskSheet';
 import type { Task, TaskDraft } from './data/task';
 import { useTasks } from './hooks/useTasks';
+import { getAvailableTags } from './logic/filterTasks';
 import { FileScreen } from './screens/FileScreen';
 import { MissionsScreen } from './screens/MissionsScreen';
 
@@ -13,8 +14,6 @@ export function App() {
   const { tasks, isLoading, replaceTasks, toggleTask, addTask, updateTask, deleteTask } = useTasks();
   const [activeTab, setActiveTab] = useState<Tab>('missions');
   const [editedTask, setEditedTask] = useState<EditedTask>(null);
-
-  const availableTags = [...new Set(tasks.flatMap((task) => task.tags))];
 
   const handleSave = (draft: TaskDraft) => {
     if (editedTask === 'new') addTask(draft);
@@ -46,7 +45,7 @@ export function App() {
         <TaskSheet
           key={editedTask === 'new' ? 'new' : editedTask.id}
           task={editedTask === 'new' ? null : editedTask}
-          availableTags={availableTags}
+          availableTags={getAvailableTags(tasks)}
           onSave={handleSave}
           onDelete={handleDelete}
           onClose={() => setEditedTask(null)}

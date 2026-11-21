@@ -3,6 +3,11 @@
   min-height: 0;
   padding: 70px 16px 28px;
   overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.screen::-webkit-scrollbar {
+  display: none;
 }
 
 .screen-title {
@@ -93,6 +98,34 @@
 .empty-state-title {
   margin-top: 16px;
   font-size: 20px;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.filter-row--scope {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.filter-row--scope .chip {
+  padding: 0 4px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.filter-row--tags {
+  gap: 8px;
+}
+
+.filter-row--tags .chip {
+  padding: 0 10px;
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 .mission-card {
