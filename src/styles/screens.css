@@ -78,8 +78,145 @@
   margin-top: 18px;
 }
 
+.screen-note {
+  color: var(--color-peach-light);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 10px;
+  text-align: center;
+}
+
+.empty-state-title {
+  margin-top: 16px;
+  font-size: 20px;
+}
+
+.mission-card {
+  display: flex;
+  gap: 4px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  padding: 8px 10px 12px 4px;
+}
+
+.mission-check {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.mission-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: var(--border);
+  border-radius: 3px;
+  background: var(--color-light);
+}
+
+.mission-checkbox--done {
+  background: var(--color-yellow);
+}
+
+.mission-body {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 0;
+}
+
+.mission-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.mission-title--done {
+  text-decoration: line-through;
+}
+
+.mission-divider {
+  width: 70%;
+  height: 3px;
+  margin: 6px 0 8px;
+  background: var(--color-coral);
+}
+
+.mission-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  min-height: 20px;
+}
+
+.mission-due {
+  font-size: 14px;
+}
+
+.priority-badge {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  width: 58px;
+  padding-top: 8px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.bottom-nav {
+  display: flex;
+  flex: none;
+  gap: 8px;
+  padding: 10px 12px 28px;
+  border-top: var(--border);
+  background: #3e3e3e;
+}
+
+.nav-item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  min-height: 58px;
+  border: 3px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-peach-light);
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.nav-item--active {
+  border-color: var(--color-ink);
+  background: var(--color-yellow);
+  box-shadow: var(--shadow-small);
+  color: var(--color-ink);
+}
+
 @media (max-width: 480px) {
   .screen {
     padding-top: calc(env(safe-area-inset-top) + 20px);
+  }
+
+  .bottom-nav {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
   }
 }

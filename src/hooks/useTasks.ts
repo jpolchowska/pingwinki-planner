@@ -26,5 +26,12 @@ export function useTasks() {
     };
   }, [tasks]);
 
-  return { tasks: tasks ?? [], isLoading: tasks === null, replaceTasks: setTasks };
+  const toggleTask = (id: number) => {
+    setTasks(
+      (current) =>
+        current?.map((task) => (task.id === id ? { ...task, done: !task.done } : task)) ?? null,
+    );
+  };
+
+  return { tasks: tasks ?? [], isLoading: tasks === null, replaceTasks: setTasks, toggleTask };
 }
