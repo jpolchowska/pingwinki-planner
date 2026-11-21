@@ -1,0 +1,114 @@
+:root {
+  --color-coral: #e97157;
+  --color-graphite: #4f4f4f;
+  --color-ink: #1e1e1e;
+  --color-peach: #f1bc80;
+  --color-peach-light: #ffe0bf;
+  --color-yellow: #ffd25a;
+  --color-pink: #f4a6b8;
+  --color-light: #f8f8f8;
+  --color-ice: #bfe3ea;
+  --font-display: 'Chakra Petch', 'Nunito', sans-serif;
+  --font-body: 'Nunito', sans-serif;
+  --border: 3px solid var(--color-ink);
+  --shadow: 4px 4px 0 var(--color-ink);
+  --shadow-small: 3px 3px 0 var(--color-ink);
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 700;
+}
+
+button {
+  color: inherit;
+  font-family: var(--font-display);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+.title {
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.button {
+  min-height: 48px;
+  padding: 0 16px;
+  border: var(--border);
+  border-radius: 4px;
+  background: var(--color-yellow);
+  box-shadow: var(--shadow);
+  color: var(--color-ink);
+  font-size: 17px;
+  text-transform: uppercase;
+}
+
+.button:active {
+  box-shadow: 1px 1px 0 var(--color-ink);
+  transform: translate(3px, 3px);
+}
+
+.button--secondary {
+  background: var(--color-light);
+}
+
+.button--disabled {
+  opacity: 0.55;
+}
+
+.chip {
+  min-height: 44px;
+  padding: 0 14px;
+  border: var(--border);
+  border-radius: 4px;
+  background: var(--color-light);
+  box-shadow: var(--shadow-small);
+  color: var(--color-ink);
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+.chip--active {
+  background: var(--color-yellow);
+}
+
+.tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border: 2px solid var(--color-ink);
+  border-radius: 3px;
+  background: var(--color-graphite);
+  color: #fff;
+  font-size: 14px;
+}
+
+.card {
+  padding: 14px;
+  border: var(--border);
+  border-radius: 6px;
+  background: var(--color-light);
+  box-shadow: var(--shadow);
+  color: var(--color-ink);
+}
+
+.card--peach {
+  background: var(--color-peach-light);
+}
+
+.card-divider {
+  height: 3px;
+  margin: 8px 0 10px;
+  background: var(--color-coral);
+}
