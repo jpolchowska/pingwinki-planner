@@ -1,4 +1,5 @@
 import { INITIAL_PROGRESS, type Progress } from '../logic/progress';
+import { SHOP_ITEMS } from '../logic/shop';
 
 const STORAGE_KEY = 'mission-impenguinable:progress';
 
@@ -13,7 +14,7 @@ function isCountRecord(value: unknown) {
 function isProgress(value: unknown): value is Progress {
   if (!isRecord(value)) return false;
 
-  const { fish, divesByDate, taskDives, rewardedTaskIds } = value;
+  const { fish, divesByDate, taskDives, rewardedTaskIds, ownedItems } = value;
   return (
     Number.isInteger(fish) &&
     (fish as number) >= 0 &&
@@ -21,7 +22,9 @@ function isProgress(value: unknown): value is Progress {
     isRecord(taskDives) &&
     Object.values(taskDives).every(isCountRecord) &&
     Array.isArray(rewardedTaskIds) &&
-    rewardedTaskIds.every((id) => Number.isInteger(id))
+    rewardedTaskIds.every((id) => Number.isInteger(id)) &&
+    Array.isArray(ownedItems) &&
+    ownedItems.every((itemId) => SHOP_ITEMS.some((item) => item.id === itemId))
   );
 }
 
@@ -31,7 +34,10 @@ export function loadStoredProgress(): Progress {
     if (stored === null) return INITIAL_PROGRESS;
 
     const content: unknown = JSON.parse(stored);
-    return isProgress(content) ? content : INITIAL_PROGRESS;
+    if (!isRecord(content)) return INITIAL_PROGRESS;
+
+    const progress = { ...INITIAL_PROGRESS, ...content };
+    return isProgress(progress) ? progress : INITIAL_PROGRESS;
   } catch {
     return INITIAL_PROGRESS;
   }

@@ -1,10 +1,11 @@
 import { Icon, type IconName } from './Icon';
 
-export type Tab = 'today' | 'missions' | 'file';
+export type Tab = 'today' | 'missions' | 'igloo' | 'file';
 
 const TABS: { id: Tab; label: string; icon: IconName }[] = [
   { id: 'today', label: 'Dziś', icon: 'today' },
   { id: 'missions', label: 'Misje', icon: 'flag' },
+  { id: 'igloo', label: 'Igloo', icon: 'igloo' },
   { id: 'file', label: 'Plik', icon: 'file' },
 ];
 

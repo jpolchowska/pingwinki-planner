@@ -8,6 +8,7 @@ export const PIXEL_COLORS = {
   yellow: '#FFD25A',
   amber: '#E0A21A',
   pink: '#F4A6B8',
+  rose: '#D9798F',
   ice: '#BFE3EA',
   coral: '#E97157',
 } as const;
@@ -15,6 +16,14 @@ export const PIXEL_COLORS = {
 export type PenguinPose = 'ready' | 'happy' | 'sleepy' | 'dive';
 export type PixelColor = keyof typeof PIXEL_COLORS;
 export type SpriteGrid = (PixelColor | null)[][];
+
+export interface PenguinOutfit {
+  hat: boolean;
+  scarf: boolean;
+  cape: boolean;
+}
+
+export const NO_OUTFIT: PenguinOutfit = { hat: false, scarf: false, cape: false };
 
 type Point = readonly [number, number];
 
@@ -71,11 +80,16 @@ function createPainter(grid: SpriteGrid) {
 
 type Painter = ReturnType<typeof createPainter>;
 
-function paintBody({ pixel, ellipse, outlinedEllipse }: Painter, pose: PenguinPose) {
-  outlinedEllipse(6, 26.5, 3.4, 6.5, 'yellow');
-  outlinedEllipse(24, 26.5, 3.4, 6.5, 'yellow');
-  ellipse(5.5, 27.5, 1, 4, 'amber');
-  ellipse(24.5, 27.5, 1, 4, 'amber');
+function paintBody(
+  { pixel, ellipse, outlinedEllipse }: Painter,
+  pose: PenguinPose,
+  capeColor: PixelColor,
+  capeShade: PixelColor,
+) {
+  outlinedEllipse(6, 26.5, 3.4, 6.5, capeColor);
+  outlinedEllipse(24, 26.5, 3.4, 6.5, capeColor);
+  ellipse(5.5, 27.5, 1, 4, capeShade);
+  ellipse(24.5, 27.5, 1, 4, capeShade);
   outlinedEllipse(15, 26, 8.5, 7, 'body');
   ellipse(15, 28, 5.4, 4.4, 'white');
   for (let y = 22; y <= 30; y++) pixel(22, y, 'shade');
@@ -83,10 +97,37 @@ function paintBody({ pixel, ellipse, outlinedEllipse }: Painter, pose: PenguinPo
   outlinedEllipse(19.5, 34.5, 3.4, 1.4, 'yellow');
   outlinedEllipse(6.6, 25.5, 1.8, 4.2, 'shade');
   if (pose !== 'happy') outlinedEllipse(23.4, 25.5, 1.8, 4.2, 'shade');
-  outlinedEllipse(15, 19, 8, 1.8, 'yellow');
-  outlinedEllipse(13.2, 22.3, 1.4, 1.1, 'yellow');
-  outlinedEllipse(16.8, 22.3, 1.4, 1.1, 'yellow');
-  pixel(15, 22, 'amber');
+  outlinedEllipse(15, 19, 8, 1.8, capeColor);
+  outlinedEllipse(13.2, 22.3, 1.4, 1.1, capeColor);
+  outlinedEllipse(16.8, 22.3, 1.4, 1.1, capeColor);
+  pixel(15, 22, capeShade);
+}
+
+function paintRect(
+  { pixel }: Painter,
+  [left, top]: Point,
+  [right, bottom]: Point,
+  color: PixelColor,
+) {
+  for (let y = top; y <= bottom; y++) {
+    for (let x = left; x <= right; x++) pixel(x, y, color);
+  }
+}
+
+function paintHat(painter: Painter) {
+  paintRect(painter, [9, 0], [21, 6], 'outline');
+  paintRect(painter, [10, 1], [20, 5], 'coral');
+  paintRect(painter, [10, 4], [20, 4], 'yellow');
+  paintRect(painter, [5, 6], [25, 8], 'outline');
+  paintRect(painter, [6, 7], [24, 7], 'coral');
+}
+
+function paintScarf(painter: Painter) {
+  paintRect(painter, [6, 20], [24, 23], 'outline');
+  paintRect(painter, [7, 21], [23, 22], 'coral');
+  paintRect(painter, [18, 23], [22, 30], 'outline');
+  paintRect(painter, [19, 23], [21, 29], 'coral');
+  paintRect(painter, [19, 26], [21, 26], 'yellow');
 }
 
 function paintHead({ ellipse, outlinedEllipse, points }: Painter) {
@@ -148,12 +189,14 @@ function rotateForDive(grid: SpriteGrid): SpriteGrid {
   return rotated;
 }
 
-export function buildPenguinSprite(pose: PenguinPose): SpriteGrid {
+export function buildPenguinSprite(pose: PenguinPose, outfit = NO_OUTFIT): SpriteGrid {
   const grid = createGrid(SPRITE_WIDTH, SPRITE_HEIGHT);
   const painter = createPainter(grid);
 
-  paintBody(painter, pose);
+  paintBody(painter, pose, outfit.cape ? 'pink' : 'yellow', outfit.cape ? 'rose' : 'amber');
   paintHead(painter);
+  if (outfit.scarf) paintScarf(painter);
+  if (outfit.hat) paintHat(painter);
 
   if (pose === 'ready' || pose === 'dive') paintOpenEyes(painter);
   if (pose === 'sleepy') paintSleepyFace(painter);

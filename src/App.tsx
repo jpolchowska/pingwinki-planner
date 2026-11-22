@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { AttackPlanSheet } from './components/AttackPlanSheet';
 import { BottomNav, type Tab } from './components/BottomNav';
 import { FishCounter } from './components/FishCounter';
+import { PenguinOutfitContext } from './components/PenguinOutfitContext';
 import { PhoneFrame } from './components/PhoneFrame';
 import { TaskSheet } from './components/TaskSheet';
 import type { Task, TaskDraft } from './data/task';
@@ -11,9 +12,11 @@ import { useTasks } from './hooks/useTasks';
 import { getTodayIso } from './logic/dates';
 import { getAvailableTags } from './logic/filterTasks';
 import { canEarnGoldenFish, DIVE_SECONDS, getBreakSeconds } from './logic/progress';
+import { getPenguinOutfit } from './logic/shop';
 import { DiveResultScreen, type DiveReward } from './screens/DiveResultScreen';
 import { DiveScreen } from './screens/DiveScreen';
 import { FileScreen } from './screens/FileScreen';
+import { IglooScreen } from './screens/IglooScreen';
 import { MissionsScreen } from './screens/MissionsScreen';
 import { TodayScreen } from './screens/TodayScreen';
 
@@ -37,7 +40,9 @@ export function App() {
     deleteTask,
   } = useTasks();
   const { plans, savePlan, removePlan, clearPlans } = useAttackPlans();
-  const { progress, recordDive, rewardMission, forgetMission, forgetAllMissions } = useProgress();
+  const { progress, recordDive, rewardMission, forgetMission, forgetAllMissions, purchaseItem } =
+    useProgress();
+  const outfit = useMemo(() => getPenguinOutfit(progress.ownedItems), [progress.ownedItems]);
   const [activeTab, setActiveTab] = useState<Tab>('today');
   const [editor, setEditor] = useState<TaskEditor>(null);
   const [plannedTask, setPlannedTask] = useState<PlannedTask | null>(null);
@@ -111,98 +116,104 @@ export function App() {
   };
 
   return (
-    <PhoneFrame>
-      <FishCounter fish={progress.fish} />
+    <PenguinOutfitContext value={outfit}>
+      <PhoneFrame>
+        <FishCounter fish={progress.fish} />
 
-      {session?.screen === 'dive' && (
-        <DiveScreen
-          key="dive"
-          mode="dive"
-          title={session.task.title}
-          seconds={DIVE_SECONDS}
-          onFinish={() => handleDiveFinish(session.task)}
-          onExit={() => setSession({ screen: 'result', reward: 'none', breakSeconds: null })}
-        />
-      )}
-      {session?.screen === 'break' && (
-        <DiveScreen
-          key="break"
-          mode="break"
-          title="Odpocznij chwilę"
-          seconds={session.seconds}
-          onFinish={() => setSession(null)}
-          onExit={() => setSession(null)}
-        />
-      )}
-      {session?.screen === 'result' && (
-        <DiveResultScreen
-          reward={session.reward}
-          breakSeconds={session.breakSeconds}
-          onBreak={() => {
-            if (session.breakSeconds !== null) {
-              setSession({ screen: 'break', seconds: session.breakSeconds });
-            }
-          }}
-          onBack={() => setSession(null)}
-        />
-      )}
+        {session?.screen === 'dive' && (
+          <DiveScreen
+            key="dive"
+            mode="dive"
+            title={session.task.title}
+            seconds={DIVE_SECONDS}
+            onFinish={() => handleDiveFinish(session.task)}
+            onExit={() => setSession({ screen: 'result', reward: 'none', breakSeconds: null })}
+          />
+        )}
+        {session?.screen === 'break' && (
+          <DiveScreen
+            key="break"
+            mode="break"
+            title="Odpocznij chwilę"
+            seconds={session.seconds}
+            onFinish={() => setSession(null)}
+            onExit={() => setSession(null)}
+          />
+        )}
+        {session?.screen === 'result' && (
+          <DiveResultScreen
+            reward={session.reward}
+            breakSeconds={session.breakSeconds}
+            onBreak={() => {
+              if (session.breakSeconds !== null) {
+                setSession({ screen: 'break', seconds: session.breakSeconds });
+              }
+            }}
+            onBack={() => setSession(null)}
+          />
+        )}
 
-      {!session && activeTab === 'today' && (
-        <TodayScreen
-          tasks={tasks}
-          plans={plans}
-          taskDives={progress.taskDives}
-          isLoading={isLoading}
-          onDive={(task) => setSession({ screen: 'dive', task })}
-          onComplete={handleTodayComplete}
-          onReschedule={handleReschedule}
-        />
-      )}
-      {!session && activeTab === 'missions' && (
-        <MissionsScreen
-          tasks={tasks}
-          plans={plans}
-          isLoading={isLoading}
-          onToggle={toggleMission}
-          onOpen={(task) => setEditor({ task, initialDueDate: null })}
-          onAdd={(initialDueDate) => setEditor({ task: null, initialDueDate })}
-        />
-      )}
-      {!session && activeTab === 'file' && (
-        <FileScreen tasks={tasks} isLoading={isLoading} onImport={handleImport} />
-      )}
-      {!session && <BottomNav activeTab={activeTab} onChange={setActiveTab} />}
+        {!session && activeTab === 'today' && (
+          <TodayScreen
+            tasks={tasks}
+            plans={plans}
+            taskDives={progress.taskDives}
+            divesByDate={progress.divesByDate}
+            isLoading={isLoading}
+            onDive={(task) => setSession({ screen: 'dive', task })}
+            onComplete={handleTodayComplete}
+            onReschedule={handleReschedule}
+          />
+        )}
+        {!session && activeTab === 'missions' && (
+          <MissionsScreen
+            tasks={tasks}
+            plans={plans}
+            isLoading={isLoading}
+            onToggle={toggleMission}
+            onOpen={(task) => setEditor({ task, initialDueDate: null })}
+            onAdd={(initialDueDate) => setEditor({ task: null, initialDueDate })}
+          />
+        )}
+        {!session && activeTab === 'igloo' && (
+          <IglooScreen progress={progress} onBuy={purchaseItem} />
+        )}
+        {!session && activeTab === 'file' && (
+          <FileScreen tasks={tasks} isLoading={isLoading} onImport={handleImport} />
+        )}
+        {!session && <BottomNav activeTab={activeTab} onChange={setActiveTab} />}
 
-      {editor && (
-        <TaskSheet
-          key={editor.task?.id ?? 'new'}
-          task={editor.task}
-          initialDueDate={editor.initialDueDate}
-          availableTags={getAvailableTags(tasks)}
-          onSave={handleSave}
-          onPlan={handlePlan}
-          onDive={handleSheetDive}
-          onDelete={handleDelete}
-          onClose={() => setEditor(null)}
-        />
-      )}
-      {plannedTask && (
-        <AttackPlanSheet
-          key={plannedTask.id}
-          task={plannedTask}
-          today={getTodayIso()}
-          currentPlan={plans[plannedTask.id]}
-          onConfirm={(days) => {
-            savePlan(plannedTask.id, days);
-            setPlannedTask(null);
-          }}
-          onRemove={() => {
-            removePlan(plannedTask.id);
-            setPlannedTask(null);
-          }}
-          onClose={() => setPlannedTask(null)}
-        />
-      )}
-    </PhoneFrame>
+        {editor && (
+          <TaskSheet
+            key={editor.task?.id ?? 'new'}
+            task={editor.task}
+            initialDueDate={editor.initialDueDate}
+            availableTags={getAvailableTags(tasks)}
+            onSave={handleSave}
+            onPlan={handlePlan}
+            onDive={handleSheetDive}
+            onDelete={handleDelete}
+            onClose={() => setEditor(null)}
+          />
+        )}
+        {plannedTask && (
+          <AttackPlanSheet
+            key={plannedTask.id}
+            task={plannedTask}
+            today={getTodayIso()}
+            currentPlan={plans[plannedTask.id]}
+            onConfirm={(days) => {
+              savePlan(plannedTask.id, days);
+              setPlannedTask(null);
+            }}
+            onRemove={() => {
+              removePlan(plannedTask.id);
+              setPlannedTask(null);
+            }}
+            onClose={() => setPlannedTask(null)}
+          />
+        )}
+      </PhoneFrame>
+    </PenguinOutfitContext>
   );
 }

@@ -8,15 +8,6 @@ const ICON_SHAPES = {
       <path d="M12 22 L12 22" />
     </>
   ),
-  paw: (
-    <>
-      <ellipse cx="24" cy="31" rx="9" ry="7.5" />
-      <circle cx="10" cy="22" r="4" />
-      <circle cx="18" cy="12" r="4" />
-      <circle cx="30" cy="12" r="4" />
-      <circle cx="38" cy="22" r="4" />
-    </>
-  ),
   ball: (
     <>
       <circle cx="24" cy="24" r="16" />

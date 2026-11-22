@@ -1,4 +1,5 @@
 import type { Task } from '../data/task';
+import type { ShopItemId } from './shop';
 
 const DIVES_BEFORE_LONG_BREAK = 4;
 const SHORT_BREAK_SECONDS = 5 * 60;
@@ -12,6 +13,7 @@ export interface Progress {
   divesByDate: Record<string, number>;
   taskDives: Record<number, Record<string, number>>;
   rewardedTaskIds: number[];
+  ownedItems: ShopItemId[];
 }
 
 export const INITIAL_PROGRESS: Progress = {
@@ -19,6 +21,7 @@ export const INITIAL_PROGRESS: Progress = {
   divesByDate: {},
   taskDives: {},
   rewardedTaskIds: [],
+  ownedItems: [],
 };
 
 export function addCompletedDive(progress: Progress, taskId: number, date: string): Progress {

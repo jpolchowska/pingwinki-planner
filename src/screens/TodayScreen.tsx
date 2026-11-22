@@ -14,6 +14,7 @@ import {
   getNextWeekendDate,
   getTodayIso,
 } from '../logic/dates';
+import { getBuildWeek } from '../logic/iglooBuild';
 import { getOverloadWarning } from '../logic/overload';
 import type { Progress } from '../logic/progress';
 import { getOverdueTasks } from '../logic/rescue';
@@ -25,6 +26,7 @@ interface TodayScreenProps {
   tasks: Task[];
   plans: AttackPlans;
   taskDives: Progress['taskDives'];
+  divesByDate: Progress['divesByDate'];
   isLoading: boolean;
   onDive: (task: Task) => void;
   onComplete: (id: number) => void;
@@ -44,6 +46,7 @@ export function TodayScreen({
   tasks,
   plans,
   taskDives,
+  divesByDate,
   isLoading,
   onDive,
   onComplete,
@@ -57,6 +60,8 @@ export function TodayScreen({
   const overloadWarning = getOverloadWarning(tasks, today);
   const plannedDives = getPlannedDivesOn(plans, tasks, today);
   const plannedDiveCount = countPlannedDives(plannedDives);
+  const buildWeek = getBuildWeek(divesByDate, today);
+  const builtDays = buildWeek.filter(({ isBuilt }) => isBuilt).length;
 
   return (
     <main className="screen">
@@ -64,6 +69,18 @@ export function TodayScreen({
         <div className="today-hero-text">
           <h1 className="title today-title">Dzisiejsza misja</h1>
           <p className="today-date">{formatFullDate(today)}</p>
+          <div
+            className="today-build"
+            role="img"
+            aria-label={`Budowa igloo: ${builtDays} z ${buildWeek.length} dni w tym tygodniu`}
+          >
+            {buildWeek.map(({ date, isBuilt }) => (
+              <span
+                className={`build-block build-block--mini${isBuilt ? ' build-block--placed' : ''}`}
+                key={date}
+              />
+            ))}
+          </div>
         </div>
         <Penguin pose={mainMission ? 'ready' : 'sleepy'} pixelSize={4} />
       </header>

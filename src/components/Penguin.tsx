@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
+import { PenguinOutfitContext } from './PenguinOutfitContext';
 import { buildPenguinSprite, PIXEL_COLORS, type PenguinPose } from './penguinSprite';
 
 const POSE_LABELS: Record<PenguinPose, string> = {
@@ -14,8 +15,10 @@ interface PenguinProps {
 }
 
 export function Penguin({ pose = 'ready', pixelSize = 4 }: PenguinProps) {
+  const outfit = useContext(PenguinOutfitContext);
+
   const { width, height, boxShadow } = useMemo(() => {
-    const grid = buildPenguinSprite(pose);
+    const grid = buildPenguinSprite(pose, outfit);
     const shadows = grid.flatMap((row, y) =>
       row.flatMap((color, x) =>
         color ? [`${x * pixelSize}px ${y * pixelSize}px 0 0 ${PIXEL_COLORS[color]}`] : [],
@@ -27,7 +30,7 @@ export function Penguin({ pose = 'ready', pixelSize = 4 }: PenguinProps) {
       height: grid.length * pixelSize,
       boxShadow: shadows.join(','),
     };
-  }, [pose, pixelSize]);
+  }, [pose, pixelSize, outfit]);
 
   return (
     <div role="img" aria-label={POSE_LABELS[pose]} style={{ position: 'relative', width, height }}>
