@@ -18,6 +18,13 @@ export function formatShortDate(isoDate: string) {
   return `${isoDate.slice(8, 10)}.${isoDate.slice(5, 7)}`;
 }
 
+export function formatFullDate(isoDate: string) {
+  const weekday = new Intl.DateTimeFormat('pl-PL', { weekday: 'long', timeZone: 'UTC' }).format(
+    toUtcTime(isoDate),
+  );
+  return `${weekday}, ${formatShortDate(isoDate)}.${isoDate.slice(0, 4)}`;
+}
+
 export function getDueLabel(dueDate: string | null, today: string) {
   if (dueDate === null) return 'bez terminu';
 

@@ -1,5 +1,6 @@
 import type { Task } from '../data/task';
 import { formatShortDate, getDueLabel } from '../logic/dates';
+import { IceFloe } from './IceFloe';
 import { Icon } from './Icon';
 import { PriorityBadge } from './PriorityBadge';
 
@@ -38,6 +39,7 @@ export function MissionCard({ task, today, onToggle, onOpen }: MissionCardProps)
               {tag}
             </span>
           ))}
+          {!task.done && <IceFloe dueDate={task.dueDate} today={today} />}
           <span className="mission-due">{dueLabel}</span>
         </span>
       </button>

@@ -7,12 +7,13 @@ import { useTasks } from './hooks/useTasks';
 import { getAvailableTags } from './logic/filterTasks';
 import { FileScreen } from './screens/FileScreen';
 import { MissionsScreen } from './screens/MissionsScreen';
+import { TodayScreen } from './screens/TodayScreen';
 
 type EditedTask = Task | 'new' | null;
 
 export function App() {
   const { tasks, isLoading, replaceTasks, toggleTask, addTask, updateTask, deleteTask } = useTasks();
-  const [activeTab, setActiveTab] = useState<Tab>('missions');
+  const [activeTab, setActiveTab] = useState<Tab>('today');
   const [editedTask, setEditedTask] = useState<EditedTask>(null);
 
   const handleSave = (draft: TaskDraft) => {
@@ -28,6 +29,9 @@ export function App() {
 
   return (
     <PhoneFrame>
+      {activeTab === 'today' && (
+        <TodayScreen tasks={tasks} isLoading={isLoading} onComplete={toggleTask} />
+      )}
       {activeTab === 'missions' && (
         <MissionsScreen
           tasks={tasks}
