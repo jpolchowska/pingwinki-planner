@@ -7,16 +7,24 @@ const PRIORITIES: Priority[] = ['low', 'medium', 'high'];
 
 interface TaskSheetProps {
   task: Task | null;
+  initialDueDate: string | null;
   availableTags: string[];
   onSave: (draft: TaskDraft) => void;
   onDelete: (id: number) => void;
   onClose: () => void;
 }
 
-export function TaskSheet({ task, availableTags, onSave, onDelete, onClose }: TaskSheetProps) {
+export function TaskSheet({
+  task,
+  initialDueDate,
+  availableTags,
+  onSave,
+  onDelete,
+  onClose,
+}: TaskSheetProps) {
   const [title, setTitle] = useState(task?.title ?? '');
   const [description, setDescription] = useState(task?.description ?? '');
-  const [dueDate, setDueDate] = useState(task?.dueDate ?? '');
+  const [dueDate, setDueDate] = useState(task ? (task.dueDate ?? '') : (initialDueDate ?? ''));
   const [priority, setPriority] = useState<Priority>(task?.priority ?? 'medium');
   const [tags, setTags] = useState(task?.tags ?? []);
   const [newTag, setNewTag] = useState('');

@@ -12,6 +12,21 @@ function formatImportantMissions(count: number) {
   return `${count} ${usesFewForm ? 'ważne misje' : 'ważnych misji'}`;
 }
 
+export function isOverloadedDay(tasks: Task[], isoDate: string) {
+  const importantTasks = tasks.filter(
+    (task) => !task.done && task.priority === 'high' && task.dueDate !== null,
+  );
+  const dayTasks = importantTasks.filter((task) => task.dueDate === isoDate);
+
+  return dayTasks.some((dayTask) =>
+    importantTasks.some(
+      (task) =>
+        task.id !== dayTask.id &&
+        Math.abs(daysUntil(task.dueDate!, isoDate)) <= OVERLOAD_WINDOW_DAYS,
+    ),
+  );
+}
+
 export function getOverloadWarning(tasks: Task[], today: string) {
   const importantTasks = tasks
     .filter((task) => {

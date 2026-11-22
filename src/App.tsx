@@ -9,7 +9,7 @@ import { FileScreen } from './screens/FileScreen';
 import { MissionsScreen } from './screens/MissionsScreen';
 import { TodayScreen } from './screens/TodayScreen';
 
-type EditedTask = Task | 'new' | null;
+type TaskEditor = { task: Task | null; initialDueDate: string | null } | null;
 
 export function App() {
   const {
@@ -23,17 +23,17 @@ export function App() {
     deleteTask,
   } = useTasks();
   const [activeTab, setActiveTab] = useState<Tab>('today');
-  const [editedTask, setEditedTask] = useState<EditedTask>(null);
+  const [editor, setEditor] = useState<TaskEditor>(null);
 
   const handleSave = (draft: TaskDraft) => {
-    if (editedTask === 'new') addTask(draft);
-    else if (editedTask) updateTask(editedTask.id, draft);
-    setEditedTask(null);
+    if (editor?.task) updateTask(editor.task.id, draft);
+    else addTask(draft);
+    setEditor(null);
   };
 
   const handleDelete = (id: number) => {
     deleteTask(id);
-    setEditedTask(null);
+    setEditor(null);
   };
 
   return (
@@ -51,22 +51,23 @@ export function App() {
           tasks={tasks}
           isLoading={isLoading}
           onToggle={toggleTask}
-          onOpen={setEditedTask}
-          onAdd={() => setEditedTask('new')}
+          onOpen={(task) => setEditor({ task, initialDueDate: null })}
+          onAdd={(initialDueDate) => setEditor({ task: null, initialDueDate })}
         />
       )}
       {activeTab === 'file' && (
         <FileScreen tasks={tasks} isLoading={isLoading} onImport={replaceTasks} />
       )}
       <BottomNav activeTab={activeTab} onChange={setActiveTab} />
-      {editedTask && (
+      {editor && (
         <TaskSheet
-          key={editedTask === 'new' ? 'new' : editedTask.id}
-          task={editedTask === 'new' ? null : editedTask}
+          key={editor.task?.id ?? 'new'}
+          task={editor.task}
+          initialDueDate={editor.initialDueDate}
           availableTags={getAvailableTags(tasks)}
           onSave={handleSave}
           onDelete={handleDelete}
-          onClose={() => setEditedTask(null)}
+          onClose={() => setEditor(null)}
         />
       )}
     </PhoneFrame>
