@@ -28,9 +28,10 @@
   width: 100%;
   min-height: 150px;
   padding: 16px;
-  border: 3px dashed var(--color-yellow);
-  border-radius: 10px;
-  background: transparent;
+  border: var(--border);
+  border-radius: 6px;
+  background: #3e3e3e;
+  box-shadow: var(--shadow);
   color: #fff;
 }
 
@@ -65,8 +66,8 @@
 }
 
 .file-drop--dragging {
-  border-style: solid;
-  background: rgb(255 210 90 / 18%);
+  border-color: var(--color-yellow);
+  background: #5a5238;
 }
 
 .file-drop--dragging > * {
@@ -692,11 +693,11 @@
   flex: none;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border: var(--border);
   border-radius: 4px;
-  background: var(--color-graphite);
+  background: var(--color-ice);
 }
 
 .shop-details {
@@ -817,19 +818,22 @@
   flex-direction: column;
   align-items: center;
   padding: 22px 14px;
-  border: 3px dashed #fff;
-  border-radius: 10px;
+  border: var(--border);
+  border-radius: 6px;
+  background: var(--color-ice);
+  box-shadow: var(--shadow);
   text-align: center;
 }
 
 .result-subtitle {
   margin: 14px 0 0;
-  color: var(--color-peach-light);
+  color: var(--color-ink);
   font-size: 17px;
 }
 
 .result-title {
   margin-top: 8px;
+  color: var(--color-ink);
   font-size: 24px;
 }
 

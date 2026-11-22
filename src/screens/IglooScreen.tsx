@@ -1,4 +1,5 @@
 import { Icon } from '../components/Icon';
+import { ItemSprite } from '../components/ItemSprite';
 import { Penguin } from '../components/Penguin';
 import { getTodayIso } from '../logic/dates';
 import { getBuildWeek, getDiveStreak } from '../logic/iglooBuild';
@@ -34,7 +35,7 @@ export function IglooScreen({ progress, onBuy }: IglooScreenProps) {
         <div className="igloo-shelves">
           {shelfItems.map((itemId, index) => (
             <div className={`igloo-slot${itemId ? ' igloo-slot--filled' : ''}`} key={index}>
-              {itemId && <Icon name={itemId} color="#1E1E1E" size={40} />}
+              {itemId && <ItemSprite item={itemId} size={48} />}
             </div>
           ))}
         </div>
@@ -68,7 +69,7 @@ export function IglooScreen({ progress, onBuy }: IglooScreenProps) {
         return (
           <article className="card card--peach shop-item" key={item.id}>
             <div className="shop-icon">
-              <Icon name={item.id} size={32} />
+              <ItemSprite item={item.id} size={32} />
             </div>
             <div className="shop-details">
               <h3 className="shop-name">{item.name}</h3>

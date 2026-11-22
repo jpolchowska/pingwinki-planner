@@ -1,6 +1,6 @@
 import type { Progress } from './progress';
 
-export type ShopItemId = 'ball' | 'hat' | 'scarf' | 'cape' | 'toy';
+export type ShopItemId = 'ball' | 'hat' | 'scarf' | 'glasses' | 'toy';
 
 export interface ShopItem {
   id: ShopItemId;
@@ -9,10 +9,10 @@ export interface ShopItem {
 }
 
 export const SHOP_ITEMS: ShopItem[] = [
-  { id: 'ball', name: 'Piłeczka', price: 3 },
+  { id: 'ball', name: 'Piłka', price: 3 },
   { id: 'hat', name: 'Kapelusz', price: 4 },
   { id: 'scarf', name: 'Szalik', price: 5 },
-  { id: 'cape', name: 'Różowa peleryna', price: 6 },
+  { id: 'glasses', name: 'Okulary agenta', price: 6 },
   { id: 'toy', name: 'Zabawka', price: 7 },
 ];
 
@@ -34,6 +34,6 @@ export function getPenguinOutfit(ownedItems: ShopItemId[]) {
   return {
     hat: ownedItems.includes('hat'),
     scarf: ownedItems.includes('scarf'),
-    cape: ownedItems.includes('cape'),
+    glasses: ownedItems.includes('glasses'),
   };
 }

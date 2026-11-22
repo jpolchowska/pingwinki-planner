@@ -11,6 +11,14 @@ function isCountRecord(value: unknown) {
   return isRecord(value) && Object.values(value).every((count) => Number.isInteger(count));
 }
 
+function isShopItemId(value: unknown) {
+  return SHOP_ITEMS.some((item) => item.id === value);
+}
+
+function getKnownItems(value: unknown) {
+  return Array.isArray(value) ? value.filter(isShopItemId) : [];
+}
+
 function isProgress(value: unknown): value is Progress {
   if (!isRecord(value)) return false;
 
@@ -22,7 +30,7 @@ function isProgress(value: unknown): value is Progress {
     Array.isArray(rewardedTaskIds) &&
     rewardedTaskIds.every((id) => Number.isInteger(id)) &&
     Array.isArray(ownedItems) &&
-    ownedItems.every((itemId) => SHOP_ITEMS.some((item) => item.id === itemId))
+    ownedItems.every(isShopItemId)
   );
 }
 
@@ -34,7 +42,11 @@ export function loadStoredProgress(): Progress {
     const content: unknown = JSON.parse(stored);
     if (!isRecord(content)) return INITIAL_PROGRESS;
 
-    const progress = { ...INITIAL_PROGRESS, ...content };
+    const progress = {
+      ...INITIAL_PROGRESS,
+      ...content,
+      ownedItems: getKnownItems(content.ownedItems),
+    };
     return isProgress(progress) ? progress : INITIAL_PROGRESS;
   } catch {
     return INITIAL_PROGRESS;
