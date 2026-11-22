@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Priority, Task } from '../data/task';
+import { countPlannedDives, getPlannedDivesOn, type AttackPlans } from '../logic/attackPlan';
 import {
   formatCalendarMonth,
   getCalendarMonth,
@@ -23,6 +24,7 @@ const MARKER_CLASSES: Record<Priority, string> = {
 
 interface MissionCalendarProps {
   tasks: Task[];
+  plans: AttackPlans;
   today: string;
   selectedDate: string;
   onSelect: (isoDate: string) => void;
@@ -32,6 +34,7 @@ interface MissionCalendarProps {
 
 export function MissionCalendar({
   tasks,
+  plans,
   today,
   selectedDate,
   onSelect,
@@ -40,6 +43,7 @@ export function MissionCalendar({
 }: MissionCalendarProps) {
   const [visibleMonth, setVisibleMonth] = useState(() => getCalendarMonth(selectedDate));
   const selectedTasks = getDayTasks(tasks, selectedDate);
+  const selectedDives = getPlannedDivesOn(plans, tasks, selectedDate);
 
   const getDayClassName = (isoDate: string, isOverloaded: boolean) =>
     [
@@ -86,6 +90,8 @@ export function MissionCalendar({
           const { markers, hiddenCount, totalCount } = getDayMarkers(tasks, isoDate, MARKER_LIMIT);
           const isOverloaded = isOverloadedDay(tasks, isoDate);
           const overloadLabel = isOverloaded ? ', cienki lód' : '';
+          const diveCount = countPlannedDives(getPlannedDivesOn(plans, tasks, isoDate));
+          const diveLabel = diveCount > 0 ? `, nurkowania: ${diveCount}` : '';
 
           return (
             <button
@@ -93,9 +99,10 @@ export function MissionCalendar({
               type="button"
               key={isoDate}
               aria-pressed={isoDate === selectedDate}
-              aria-label={`${formatShortDate(isoDate)}, misje: ${totalCount}${overloadLabel}`}
+              aria-label={`${formatShortDate(isoDate)}, misje: ${totalCount}${diveLabel}${overloadLabel}`}
               onClick={() => onSelect(isoDate)}
             >
+              {diveCount > 0 && <span className="calendar-dives">{diveCount}</span>}
               <span>{Number(isoDate.slice(8))}</span>
               <span className="calendar-markers">
                 {markers.map((priority, markerIndex) => (
@@ -112,8 +119,23 @@ export function MissionCalendar({
         <span className="calendar-legend-swatch" aria-hidden="true" />
         Cienki lód: ważne terminy blisko siebie
       </p>
+      <p className="calendar-legend calendar-legend--compact">
+        <span className="calendar-legend-dive" aria-hidden="true">
+          1
+        </span>
+        Zaplanowane nurkowania
+      </p>
 
       <h2 className="title calendar-day-title">Misje na {formatShortDate(selectedDate)}</h2>
+      {selectedDives.length > 0 && (
+        <ul className="plan-list plan-list--calendar">
+          {selectedDives.map(({ task, dives }) => (
+            <li key={task.id}>
+              Nurkowania: {task.title} × {dives}
+            </li>
+          ))}
+        </ul>
+      )}
       {selectedTasks.length === 0 && <p className="screen-note">Brak misji tego dnia.</p>}
       {selectedTasks.map((task) => (
         <MissionCard task={task} today={today} onToggle={onToggle} onOpen={onOpen} key={task.id} />

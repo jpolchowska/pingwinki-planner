@@ -1,5 +1,7 @@
 import { useState, type FormEvent, type KeyboardEvent } from 'react';
 import type { Priority, Task, TaskDraft } from '../data/task';
+import { canPlanAttack } from '../logic/attackPlan';
+import { getTodayIso } from '../logic/dates';
 import { Icon } from './Icon';
 import { PriorityBadge } from './PriorityBadge';
 
@@ -10,6 +12,7 @@ interface TaskSheetProps {
   initialDueDate: string | null;
   availableTags: string[];
   onSave: (draft: TaskDraft) => void;
+  onPlan: (draft: TaskDraft) => void;
   onDelete: (id: number) => void;
   onClose: () => void;
 }
@@ -19,6 +22,7 @@ export function TaskSheet({
   initialDueDate,
   availableTags,
   onSave,
+  onPlan,
   onDelete,
   onClose,
 }: TaskSheetProps) {
@@ -61,22 +65,32 @@ export function TaskSheet({
     addPendingTag();
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const getDraft = (): TaskDraft | null => {
     const trimmedTitle = title.trim();
 
     if (!trimmedTitle) {
       setHasTitleError(true);
-      return;
+      return null;
     }
 
-    onSave({
+    return {
       title: trimmedTitle,
       description: description.trim(),
       dueDate: dueDate || null,
       priority,
       tags: getTagsWithPending(),
-    });
+    };
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const draft = getDraft();
+    if (draft) onSave(draft);
+  };
+
+  const handlePlan = () => {
+    const draft = getDraft();
+    if (draft) onPlan(draft);
   };
 
   return (
@@ -184,6 +198,12 @@ export function TaskSheet({
             Dodaj
           </button>
         </div>
+
+        {task && !task.done && canPlanAttack(dueDate || null, getTodayIso()) && (
+          <button className="button button--secondary sheet-plan" type="button" onClick={handlePlan}>
+            Zaplanuj atak
+          </button>
+        )}
 
         {isConfirmingDelete && task ? (
           <div className="delete-confirm">

@@ -4,6 +4,7 @@ import { MissionCalendar } from '../components/MissionCalendar';
 import { MissionCard } from '../components/MissionCard';
 import { Penguin } from '../components/Penguin';
 import type { Task } from '../data/task';
+import type { AttackPlans } from '../logic/attackPlan';
 import { getTodayIso } from '../logic/dates';
 import { filterTasks, getAvailableTags, type TaskScope } from '../logic/filterTasks';
 import { sortTasks } from '../logic/sortTasks';
@@ -23,13 +24,21 @@ const SCOPES: { id: TaskScope; label: string }[] = [
 
 interface MissionsScreenProps {
   tasks: Task[];
+  plans: AttackPlans;
   isLoading: boolean;
   onToggle: (id: number) => void;
   onOpen: (task: Task) => void;
   onAdd: (dueDate: string | null) => void;
 }
 
-export function MissionsScreen({ tasks, isLoading, onToggle, onOpen, onAdd }: MissionsScreenProps) {
+export function MissionsScreen({
+  tasks,
+  plans,
+  isLoading,
+  onToggle,
+  onOpen,
+  onAdd,
+}: MissionsScreenProps) {
   const today = getTodayIso();
   const [view, setView] = useState<MissionsView>('list');
   const [selectedDate, setSelectedDate] = useState(today);
@@ -64,6 +73,7 @@ export function MissionsScreen({ tasks, isLoading, onToggle, onOpen, onAdd }: Mi
         {view === 'calendar' && !isLoading && (
           <MissionCalendar
             tasks={tasks}
+            plans={plans}
             today={today}
             selectedDate={selectedDate}
             onSelect={setSelectedDate}
