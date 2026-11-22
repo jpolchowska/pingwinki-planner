@@ -1,4 +1,6 @@
 const DAY_IN_MS = 86_400_000;
+const FRIDAY = 5;
+const SATURDAY = 6;
 
 function toUtcTime(isoDate: string) {
   return Date.parse(`${isoDate}T00:00:00Z`);
@@ -12,6 +14,18 @@ export function getTodayIso(now = new Date()) {
 
 export function daysUntil(dueDate: string, today: string) {
   return Math.round((toUtcTime(dueDate) - toUtcTime(today)) / DAY_IN_MS);
+}
+
+export function addDays(isoDate: string, days: number) {
+  return new Date(toUtcTime(isoDate) + days * DAY_IN_MS).toISOString().slice(0, 10);
+}
+
+export function getNextWeekendDate(today: string) {
+  const weekday = new Date(toUtcTime(today)).getUTCDay();
+  if (weekday === FRIDAY) return addDays(today, 2);
+
+  const daysToSaturday = (SATURDAY - weekday + 7) % 7 || 7;
+  return addDays(today, daysToSaturday);
 }
 
 export function formatShortDate(isoDate: string) {

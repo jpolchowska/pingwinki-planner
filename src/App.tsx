@@ -12,7 +12,16 @@ import { TodayScreen } from './screens/TodayScreen';
 type EditedTask = Task | 'new' | null;
 
 export function App() {
-  const { tasks, isLoading, replaceTasks, toggleTask, addTask, updateTask, deleteTask } = useTasks();
+  const {
+    tasks,
+    isLoading,
+    replaceTasks,
+    toggleTask,
+    addTask,
+    updateTask,
+    rescheduleTask,
+    deleteTask,
+  } = useTasks();
   const [activeTab, setActiveTab] = useState<Tab>('today');
   const [editedTask, setEditedTask] = useState<EditedTask>(null);
 
@@ -30,7 +39,12 @@ export function App() {
   return (
     <PhoneFrame>
       {activeTab === 'today' && (
-        <TodayScreen tasks={tasks} isLoading={isLoading} onComplete={toggleTask} />
+        <TodayScreen
+          tasks={tasks}
+          isLoading={isLoading}
+          onComplete={toggleTask}
+          onReschedule={rescheduleTask}
+        />
       )}
       {activeTab === 'missions' && (
         <MissionsScreen

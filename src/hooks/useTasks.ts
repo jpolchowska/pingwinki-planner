@@ -46,6 +46,12 @@ export function useTasks() {
     );
   };
 
+  const rescheduleTask = (id: number, dueDate: string) => {
+    setTasks(
+      (current) => current?.map((task) => (task.id === id ? { ...task, dueDate } : task)) ?? null,
+    );
+  };
+
   const deleteTask = (id: number) => {
     setTasks((current) => current?.filter((task) => task.id !== id) ?? null);
   };
@@ -57,6 +63,7 @@ export function useTasks() {
     toggleTask,
     addTask,
     updateTask,
+    rescheduleTask,
     deleteTask,
   };
 }
