@@ -18,8 +18,7 @@ export function useProgress() {
 
   return {
     progress,
-    recordDive: (taskId: number, date: string) =>
-      setProgress((current) => addCompletedDive(current, taskId, date)),
+    recordDive: (date: string) => setProgress((current) => addCompletedDive(current, date)),
     rewardMission: (taskId: number) => setProgress((current) => addGoldenFish(current, taskId)),
     forgetMission: (taskId: number) => setProgress((current) => forgetTask(current, taskId)),
     forgetAllMissions: () => setProgress(forgetAllTasks),

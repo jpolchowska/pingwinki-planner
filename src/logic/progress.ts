@@ -11,7 +11,6 @@ export const GOLDEN_FISH_VALUE = 3;
 export interface Progress {
   fish: number;
   divesByDate: Record<string, number>;
-  taskDives: Record<number, Record<string, number>>;
   rewardedTaskIds: number[];
   ownedItems: ShopItemId[];
 }
@@ -19,22 +18,15 @@ export interface Progress {
 export const INITIAL_PROGRESS: Progress = {
   fish: 0,
   divesByDate: {},
-  taskDives: {},
   rewardedTaskIds: [],
   ownedItems: [],
 };
 
-export function addCompletedDive(progress: Progress, taskId: number, date: string): Progress {
-  const taskDays = progress.taskDives[taskId] ?? {};
-
+export function addCompletedDive(progress: Progress, date: string): Progress {
   return {
     ...progress,
     fish: progress.fish + 1,
     divesByDate: { ...progress.divesByDate, [date]: (progress.divesByDate[date] ?? 0) + 1 },
-    taskDives: {
-      ...progress.taskDives,
-      [taskId]: { ...taskDays, [date]: (taskDays[date] ?? 0) + 1 },
-    },
   };
 }
 
@@ -53,17 +45,14 @@ export function addGoldenFish(progress: Progress, taskId: number): Progress {
 }
 
 export function forgetTask(progress: Progress, taskId: number): Progress {
-  const { [taskId]: _removed, ...taskDives } = progress.taskDives;
-
   return {
     ...progress,
-    taskDives,
     rewardedTaskIds: progress.rewardedTaskIds.filter((id) => id !== taskId),
   };
 }
 
 export function forgetAllTasks(progress: Progress): Progress {
-  return { ...progress, taskDives: {}, rewardedTaskIds: [] };
+  return { ...progress, rewardedTaskIds: [] };
 }
 
 export function getBreakSeconds(divesToday: number) {

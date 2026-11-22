@@ -1,12 +1,10 @@
 import { useMemo, useState } from 'react';
-import { AttackPlanSheet } from './components/AttackPlanSheet';
 import { BottomNav, type Tab } from './components/BottomNav';
 import { FishCounter } from './components/FishCounter';
 import { PenguinOutfitContext } from './components/PenguinOutfitContext';
 import { PhoneFrame } from './components/PhoneFrame';
 import { TaskSheet } from './components/TaskSheet';
 import type { Task, TaskDraft } from './data/task';
-import { useAttackPlans } from './hooks/useAttackPlans';
 import { useProgress } from './hooks/useProgress';
 import { useTasks } from './hooks/useTasks';
 import { getTodayIso } from './logic/dates';
@@ -21,7 +19,6 @@ import { MissionsScreen } from './screens/MissionsScreen';
 import { TodayScreen } from './screens/TodayScreen';
 
 type TaskEditor = { task: Task | null; initialDueDate: string | null } | null;
-type PlannedTask = Task & { dueDate: string };
 type FocusSession =
   | { screen: 'dive'; task: Task }
   | { screen: 'break'; seconds: number }
@@ -39,57 +36,35 @@ export function App() {
     rescheduleTask,
     deleteTask,
   } = useTasks();
-  const { plans, savePlan, removePlan, clearPlans } = useAttackPlans();
   const { progress, recordDive, rewardMission, forgetMission, forgetAllMissions, purchaseItem } =
     useProgress();
   const outfit = useMemo(() => getPenguinOutfit(progress.ownedItems), [progress.ownedItems]);
   const [activeTab, setActiveTab] = useState<Tab>('today');
   const [editor, setEditor] = useState<TaskEditor>(null);
-  const [plannedTask, setPlannedTask] = useState<PlannedTask | null>(null);
   const [session, setSession] = useState<FocusSession>(null);
 
-  const saveEditedTask = (task: Task, draft: TaskDraft) => {
-    if (draft.dueDate !== task.dueDate) removePlan(task.id);
-    updateTask(task.id, draft);
-  };
-
   const handleSave = (draft: TaskDraft) => {
-    if (editor?.task) saveEditedTask(editor.task, draft);
+    if (editor?.task) updateTask(editor.task.id, draft);
     else addTask(draft);
-    setEditor(null);
-  };
-
-  const handlePlan = (draft: TaskDraft) => {
-    if (!editor?.task || draft.dueDate === null) return;
-
-    saveEditedTask(editor.task, draft);
-    setPlannedTask({ ...editor.task, ...draft, dueDate: draft.dueDate });
     setEditor(null);
   };
 
   const handleSheetDive = (draft: TaskDraft) => {
     if (!editor?.task) return;
 
-    saveEditedTask(editor.task, draft);
+    updateTask(editor.task.id, draft);
     setSession({ screen: 'dive', task: { ...editor.task, ...draft } });
     setEditor(null);
   };
 
   const handleDelete = (id: number) => {
     deleteTask(id);
-    removePlan(id);
     forgetMission(id);
     setEditor(null);
   };
 
-  const handleReschedule = (id: number, dueDate: string) => {
-    rescheduleTask(id, dueDate);
-    removePlan(id);
-  };
-
   const handleImport = (importedTasks: Task[]) => {
     replaceTasks(importedTasks);
-    clearPlans();
     forgetAllMissions();
   };
 
@@ -107,11 +82,11 @@ export function App() {
     if (toggleMission(id)) setSession({ screen: 'result', reward: 'golden', breakSeconds: null });
   };
 
-  const handleDiveFinish = (task: Task) => {
+  const handleDiveFinish = () => {
     const today = getTodayIso();
     const divesToday = (progress.divesByDate[today] ?? 0) + 1;
 
-    recordDive(task.id, today);
+    recordDive(today);
     setSession({ screen: 'result', reward: 'fish', breakSeconds: getBreakSeconds(divesToday) });
   };
 
@@ -126,7 +101,7 @@ export function App() {
             mode="dive"
             title={session.task.title}
             seconds={DIVE_SECONDS}
-            onFinish={() => handleDiveFinish(session.task)}
+            onFinish={handleDiveFinish}
             onExit={() => setSession({ screen: 'result', reward: 'none', breakSeconds: null })}
           />
         )}
@@ -156,19 +131,16 @@ export function App() {
         {!session && activeTab === 'today' && (
           <TodayScreen
             tasks={tasks}
-            plans={plans}
-            taskDives={progress.taskDives}
             divesByDate={progress.divesByDate}
             isLoading={isLoading}
             onDive={(task) => setSession({ screen: 'dive', task })}
             onComplete={handleTodayComplete}
-            onReschedule={handleReschedule}
+            onReschedule={rescheduleTask}
           />
         )}
         {!session && activeTab === 'missions' && (
           <MissionsScreen
             tasks={tasks}
-            plans={plans}
             isLoading={isLoading}
             onToggle={toggleMission}
             onOpen={(task) => setEditor({ task, initialDueDate: null })}
@@ -190,27 +162,9 @@ export function App() {
             initialDueDate={editor.initialDueDate}
             availableTags={getAvailableTags(tasks)}
             onSave={handleSave}
-            onPlan={handlePlan}
             onDive={handleSheetDive}
             onDelete={handleDelete}
             onClose={() => setEditor(null)}
-          />
-        )}
-        {plannedTask && (
-          <AttackPlanSheet
-            key={plannedTask.id}
-            task={plannedTask}
-            today={getTodayIso()}
-            currentPlan={plans[plannedTask.id]}
-            onConfirm={(days) => {
-              savePlan(plannedTask.id, days);
-              setPlannedTask(null);
-            }}
-            onRemove={() => {
-              removePlan(plannedTask.id);
-              setPlannedTask(null);
-            }}
-            onClose={() => setPlannedTask(null)}
           />
         )}
       </PhoneFrame>

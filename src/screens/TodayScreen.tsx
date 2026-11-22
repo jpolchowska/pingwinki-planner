@@ -2,12 +2,6 @@ import { IceFloe } from '../components/IceFloe';
 import { Penguin } from '../components/Penguin';
 import type { Task } from '../data/task';
 import {
-  countPlannedDives,
-  DAILY_DIVE_LIMIT,
-  getPlannedDivesOn,
-  type AttackPlans,
-} from '../logic/attackPlan';
-import {
   addDays,
   formatFullDate,
   getDueLabel,
@@ -24,8 +18,6 @@ const VISIBLE_RESCUE_LIMIT = 3;
 
 interface TodayScreenProps {
   tasks: Task[];
-  plans: AttackPlans;
-  taskDives: Progress['taskDives'];
   divesByDate: Progress['divesByDate'];
   isLoading: boolean;
   onDive: (task: Task) => void;
@@ -44,8 +36,6 @@ function MissionDeadline({ task, today }: { task: Task; today: string }) {
 
 export function TodayScreen({
   tasks,
-  plans,
-  taskDives,
   divesByDate,
   isLoading,
   onDive,
@@ -58,8 +48,6 @@ export function TodayScreen({
   const visibleOverdueTasks = overdueTasks.slice(0, VISIBLE_RESCUE_LIMIT);
   const hiddenOverdueCount = overdueTasks.length - visibleOverdueTasks.length;
   const overloadWarning = getOverloadWarning(tasks, today);
-  const plannedDives = getPlannedDivesOn(plans, tasks, today);
-  const plannedDiveCount = countPlannedDives(plannedDives);
   const buildWeek = getBuildWeek(divesByDate, today);
   const builtDays = buildWeek.filter(({ isBuilt }) => isBuilt).length;
 
@@ -147,36 +135,6 @@ export function TodayScreen({
               Zrobione
             </button>
           </div>
-        </section>
-      )}
-
-      {plannedDives.length > 0 && (
-        <section className="plan-bar" aria-label="Nurkowania na dziś">
-          <div className="plan-bar-header">
-            <p className="plan-bar-title">
-              Zaplanowane nurkowania: {plannedDiveCount} z {DAILY_DIVE_LIMIT}
-            </p>
-            <span className="plan-bar-dots" aria-hidden="true">
-              {Array.from({ length: DAILY_DIVE_LIMIT }, (_, index) => (
-                <span
-                  className={`plan-bar-dot${index < plannedDiveCount ? ' plan-bar-dot--filled' : ''}`}
-                  key={index}
-                />
-              ))}
-            </span>
-          </div>
-          <ul className="plan-list">
-            {plannedDives.map(({ task, dives }) => (
-              <li key={task.id}>
-                {task.title}: {taskDives[task.id]?.[today] ?? 0} z {dives}
-              </li>
-            ))}
-          </ul>
-          {plannedDiveCount > DAILY_DIVE_LIMIT && (
-            <p className="plan-bar-warning" role="status">
-              To dużo jak na jeden dzień. Przesuń część nurkowań.
-            </p>
-          )}
         </section>
       )}
 

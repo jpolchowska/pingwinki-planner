@@ -1,7 +1,5 @@
 import { useState, type FormEvent, type KeyboardEvent } from 'react';
 import type { Priority, Task, TaskDraft } from '../data/task';
-import { canPlanAttack } from '../logic/attackPlan';
-import { getTodayIso } from '../logic/dates';
 import { Icon } from './Icon';
 import { PriorityBadge } from './PriorityBadge';
 
@@ -12,7 +10,6 @@ interface TaskSheetProps {
   initialDueDate: string | null;
   availableTags: string[];
   onSave: (draft: TaskDraft) => void;
-  onPlan: (draft: TaskDraft) => void;
   onDive: (draft: TaskDraft) => void;
   onDelete: (id: number) => void;
   onClose: () => void;
@@ -23,7 +20,6 @@ export function TaskSheet({
   initialDueDate,
   availableTags,
   onSave,
-  onPlan,
   onDive,
   onDelete,
   onClose,
@@ -88,11 +84,6 @@ export function TaskSheet({
     event.preventDefault();
     const draft = getDraft();
     if (draft) onSave(draft);
-  };
-
-  const handlePlan = () => {
-    const draft = getDraft();
-    if (draft) onPlan(draft);
   };
 
   const handleDive = () => {
@@ -207,14 +198,8 @@ export function TaskSheet({
         </div>
 
         {task && !task.done && (
-          <button className="button sheet-plan" type="button" onClick={handleDive}>
+          <button className="button sheet-dive" type="button" onClick={handleDive}>
             Nurkuj
-          </button>
-        )}
-
-        {task && !task.done && canPlanAttack(dueDate || null, getTodayIso()) && (
-          <button className="button button--secondary sheet-plan" type="button" onClick={handlePlan}>
-            Zaplanuj atak
           </button>
         )}
 

@@ -14,13 +14,11 @@ function isCountRecord(value: unknown) {
 function isProgress(value: unknown): value is Progress {
   if (!isRecord(value)) return false;
 
-  const { fish, divesByDate, taskDives, rewardedTaskIds, ownedItems } = value;
+  const { fish, divesByDate, rewardedTaskIds, ownedItems } = value;
   return (
     Number.isInteger(fish) &&
     (fish as number) >= 0 &&
     isCountRecord(divesByDate) &&
-    isRecord(taskDives) &&
-    Object.values(taskDives).every(isCountRecord) &&
     Array.isArray(rewardedTaskIds) &&
     rewardedTaskIds.every((id) => Number.isInteger(id)) &&
     Array.isArray(ownedItems) &&
