@@ -1,0 +1,68 @@
+import type { Task } from '../data/task';
+
+const DIVES_BEFORE_LONG_BREAK = 4;
+const SHORT_BREAK_SECONDS = 5 * 60;
+const LONG_BREAK_SECONDS = 15 * 60;
+
+export const DIVE_SECONDS = 25 * 60;
+export const GOLDEN_FISH_VALUE = 3;
+
+export interface Progress {
+  fish: number;
+  divesByDate: Record<string, number>;
+  taskDives: Record<number, Record<string, number>>;
+  rewardedTaskIds: number[];
+}
+
+export const INITIAL_PROGRESS: Progress = {
+  fish: 0,
+  divesByDate: {},
+  taskDives: {},
+  rewardedTaskIds: [],
+};
+
+export function addCompletedDive(progress: Progress, taskId: number, date: string): Progress {
+  const taskDays = progress.taskDives[taskId] ?? {};
+
+  return {
+    ...progress,
+    fish: progress.fish + 1,
+    divesByDate: { ...progress.divesByDate, [date]: (progress.divesByDate[date] ?? 0) + 1 },
+    taskDives: {
+      ...progress.taskDives,
+      [taskId]: { ...taskDays, [date]: (taskDays[date] ?? 0) + 1 },
+    },
+  };
+}
+
+export function canEarnGoldenFish(progress: Progress, task: Task) {
+  return task.priority === 'high' && !progress.rewardedTaskIds.includes(task.id);
+}
+
+export function addGoldenFish(progress: Progress, taskId: number): Progress {
+  if (progress.rewardedTaskIds.includes(taskId)) return progress;
+
+  return {
+    ...progress,
+    fish: progress.fish + GOLDEN_FISH_VALUE,
+    rewardedTaskIds: [...progress.rewardedTaskIds, taskId],
+  };
+}
+
+export function forgetTask(progress: Progress, taskId: number): Progress {
+  const { [taskId]: _removed, ...taskDives } = progress.taskDives;
+
+  return {
+    ...progress,
+    taskDives,
+    rewardedTaskIds: progress.rewardedTaskIds.filter((id) => id !== taskId),
+  };
+}
+
+export function forgetAllTasks(progress: Progress): Progress {
+  return { ...progress, taskDives: {}, rewardedTaskIds: [] };
+}
+
+export function getBreakSeconds(divesToday: number) {
+  return divesToday % DIVES_BEFORE_LONG_BREAK === 0 ? LONG_BREAK_SECONDS : SHORT_BREAK_SECONDS;
+}

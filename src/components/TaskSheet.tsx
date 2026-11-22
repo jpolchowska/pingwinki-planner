@@ -13,6 +13,7 @@ interface TaskSheetProps {
   availableTags: string[];
   onSave: (draft: TaskDraft) => void;
   onPlan: (draft: TaskDraft) => void;
+  onDive: (draft: TaskDraft) => void;
   onDelete: (id: number) => void;
   onClose: () => void;
 }
@@ -23,6 +24,7 @@ export function TaskSheet({
   availableTags,
   onSave,
   onPlan,
+  onDive,
   onDelete,
   onClose,
 }: TaskSheetProps) {
@@ -91,6 +93,11 @@ export function TaskSheet({
   const handlePlan = () => {
     const draft = getDraft();
     if (draft) onPlan(draft);
+  };
+
+  const handleDive = () => {
+    const draft = getDraft();
+    if (draft) onDive(draft);
   };
 
   return (
@@ -198,6 +205,12 @@ export function TaskSheet({
             Dodaj
           </button>
         </div>
+
+        {task && !task.done && (
+          <button className="button sheet-plan" type="button" onClick={handleDive}>
+            Nurkuj
+          </button>
+        )}
 
         {task && !task.done && canPlanAttack(dueDate || null, getTodayIso()) && (
           <button className="button button--secondary sheet-plan" type="button" onClick={handlePlan}>

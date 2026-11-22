@@ -15,6 +15,7 @@ import {
   getTodayIso,
 } from '../logic/dates';
 import { getOverloadWarning } from '../logic/overload';
+import type { Progress } from '../logic/progress';
 import { getOverdueTasks } from '../logic/rescue';
 import { getMissionReason, pickTodayMissions } from '../logic/todayMissions';
 
@@ -23,7 +24,9 @@ const VISIBLE_RESCUE_LIMIT = 3;
 interface TodayScreenProps {
   tasks: Task[];
   plans: AttackPlans;
+  taskDives: Progress['taskDives'];
   isLoading: boolean;
+  onDive: (task: Task) => void;
   onComplete: (id: number) => void;
   onReschedule: (id: number, dueDate: string) => void;
 }
@@ -40,7 +43,9 @@ function MissionDeadline({ task, today }: { task: Task; today: string }) {
 export function TodayScreen({
   tasks,
   plans,
+  taskDives,
   isLoading,
+  onDive,
   onComplete,
   onReschedule,
 }: TodayScreenProps) {
@@ -113,9 +118,18 @@ export function TodayScreen({
             <span className="today-label">Dlaczego</span>
             {getMissionReason(mainMission, today)}
           </p>
-          <button className="button today-done" type="button" onClick={() => onComplete(mainMission.id)}>
-            Zrobione
-          </button>
+          <div className="field-row today-main-actions">
+            <button className="button sheet-action" type="button" onClick={() => onDive(mainMission)}>
+              Nurkuj
+            </button>
+            <button
+              className="button button--secondary sheet-action"
+              type="button"
+              onClick={() => onComplete(mainMission.id)}
+            >
+              Zrobione
+            </button>
+          </div>
         </section>
       )}
 
@@ -137,7 +151,7 @@ export function TodayScreen({
           <ul className="plan-list">
             {plannedDives.map(({ task, dives }) => (
               <li key={task.id}>
-                {task.title} × {dives}
+                {task.title}: {taskDives[task.id]?.[today] ?? 0} z {dives}
               </li>
             ))}
           </ul>
@@ -158,6 +172,9 @@ export function TodayScreen({
               <div className="card-divider" />
               <MissionDeadline task={task} today={today} />
               <p className="today-side-reason">{getMissionReason(task, today)}</p>
+              <button className="button today-side-dive" type="button" onClick={() => onDive(task)}>
+                Nurkuj
+              </button>
             </article>
           ))}
         </section>
