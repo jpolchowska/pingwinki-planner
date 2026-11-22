@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
+import { AppTopBar } from './components/AppTopBar';
 import { BottomNav, type Tab } from './components/BottomNav';
-import { FishCounter } from './components/FishCounter';
 import { PenguinOutfitContext } from './components/PenguinOutfitContext';
 import { PhoneFrame } from './components/PhoneFrame';
 import { TaskSheet } from './components/TaskSheet';
@@ -9,6 +9,7 @@ import { useProgress } from './hooks/useProgress';
 import { useTasks } from './hooks/useTasks';
 import { getTodayIso } from './logic/dates';
 import { getAvailableTags } from './logic/filterTasks';
+import { getDiveStreak } from './logic/iglooBuild';
 import { canEarnGoldenFish, DIVE_SECONDS, getBreakSeconds } from './logic/progress';
 import { getPenguinOutfit } from './logic/shop';
 import { DiveResultScreen, type DiveReward } from './screens/DiveResultScreen';
@@ -93,7 +94,10 @@ export function App() {
   return (
     <PenguinOutfitContext value={outfit}>
       <PhoneFrame>
-        <FishCounter fish={progress.fish} />
+        <AppTopBar
+          fish={progress.fish}
+          streak={getDiveStreak(progress.divesByDate, getTodayIso())}
+        />
 
         {session?.screen === 'dive' && (
           <DiveScreen

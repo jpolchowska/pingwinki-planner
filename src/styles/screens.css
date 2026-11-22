@@ -135,8 +135,10 @@
   align-items: flex-end;
   justify-content: space-between;
   padding: 12px 8px 8px 14px;
-  border: 3px dashed #fff;
-  border-radius: 10px;
+  border: var(--border);
+  border-radius: 6px;
+  background: var(--color-ice);
+  box-shadow: var(--shadow);
 }
 
 .today-hero-text {
@@ -144,12 +146,13 @@
 }
 
 .today-title {
+  color: var(--color-ink);
   font-size: 22px;
 }
 
 .today-date {
   margin: 8px 0 0;
-  color: var(--color-peach-light);
+  color: var(--color-ink);
   font-size: 16px;
 }
 
@@ -220,7 +223,8 @@
 }
 
 .ice-bar-fill,
-.build-block--placed {
+.build-block--placed,
+.streak-cube--active {
   background:
     linear-gradient(#fff, #fff) 0 0 / 100% 2px no-repeat,
     linear-gradient(#8cc8d6, #8cc8d6) 0 100% / 100% 3px no-repeat,
@@ -433,24 +437,36 @@
   display: flex;
   flex: none;
   align-items: center;
-  justify-content: flex-end;
-  height: 56px;
-  padding: 8px 24px 0;
+  justify-content: space-between;
+  height: 84px;
+  padding: 30px 16px 0;
 }
 
+.streak-cube {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-ink);
+}
+
+.streak-cube:not(.streak-cube--active) {
+  background: #2f2f2f;
+}
+
+.streak-counter,
 .fish-counter {
   display: flex;
-  gap: 6px;
+  gap: 7px;
   align-items: center;
-  height: 34px;
-  padding: 0 10px;
+  height: 42px;
+  padding: 0 12px;
   border: var(--border);
   border-radius: 4px;
   background: var(--color-light);
   box-shadow: var(--shadow-small);
   color: var(--color-ink);
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 20px;
 }
 
 .focus-stage {
@@ -625,17 +641,12 @@
   }
 }
 
-.igloo-frame {
-  padding: 12px;
-  border: 3px dashed #fff;
-  border-radius: 10px;
-}
-
 .igloo-dome {
   padding: 22px 16px 14px;
   border: var(--border);
   border-radius: 80px 80px 4px 4px;
   background: var(--color-ice);
+  box-shadow: var(--shadow);
 }
 
 .igloo-penguin {
@@ -756,12 +767,19 @@
   border-width: 2px;
 }
 
+.build-block--mini:not(.build-block--placed) {
+  background: rgb(255 255 255 / 60%);
+}
+
 .build-block--mini.build-block--placed {
+  background:
+    linear-gradient(115deg, transparent 0 30%, rgb(255 255 255 / 85%) 30% 48%, transparent 48%),
+    var(--color-water);
   box-shadow: none;
 }
 
 .today-build {
-  display: flex;
+  display: inline-flex;
   gap: 4px;
   margin-top: 10px;
 }
@@ -1144,7 +1162,7 @@
 
 @media (max-width: 480px) {
   .app-topbar {
-    height: calc(env(safe-area-inset-top) + 50px);
+    height: calc(env(safe-area-inset-top) + 60px);
     padding: env(safe-area-inset-top) 16px 0;
   }
 

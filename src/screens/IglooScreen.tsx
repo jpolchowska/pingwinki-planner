@@ -27,18 +27,16 @@ export function IglooScreen({ progress, onBuy }: IglooScreenProps) {
     <main className="screen">
       <h1 className="title screen-title">Igloo</h1>
 
-      <section className="igloo-frame" aria-label="Twoje igloo">
-        <div className="igloo-dome">
-          <div className="igloo-penguin">
-            <Penguin pose="ready" pixelSize={3} />
-          </div>
-          <div className="igloo-shelves">
-            {shelfItems.map((itemId, index) => (
-              <div className={`igloo-slot${itemId ? ' igloo-slot--filled' : ''}`} key={index}>
-                {itemId && <Icon name={itemId} color="#1E1E1E" size={40} />}
-              </div>
-            ))}
-          </div>
+      <section className="igloo-dome" aria-label="Twoje igloo">
+        <div className="igloo-penguin">
+          <Penguin pose="ready" pixelSize={3} />
+        </div>
+        <div className="igloo-shelves">
+          {shelfItems.map((itemId, index) => (
+            <div className={`igloo-slot${itemId ? ' igloo-slot--filled' : ''}`} key={index}>
+              {itemId && <Icon name={itemId} color="#1E1E1E" size={40} />}
+            </div>
+          ))}
         </div>
       </section>
 
