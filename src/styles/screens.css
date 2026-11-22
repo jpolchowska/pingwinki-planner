@@ -439,8 +439,8 @@
   flex: none;
   align-items: center;
   justify-content: space-between;
-  height: 84px;
-  padding: 30px 16px 0;
+  height: 92px;
+  padding: 40px 16px 0;
 }
 
 .streak-cube {
@@ -763,8 +763,8 @@
 }
 
 .build-block--mini {
-  width: 18px;
-  height: 14px;
+  width: 22px;
+  height: 18px;
   border-width: 2px;
 }
 
