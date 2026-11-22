@@ -23,7 +23,7 @@ Przy pierwszym uruchomieniu wczytują się przykładowe zadania z [`public/zadan
 
 ## Co działa
 
-Wszystkie wymagania z zadania:
+Wymagania z zadania:
 
 - [x] lista zadań,
 - [x] dodawanie zadania,
@@ -33,17 +33,14 @@ Wszystkie wymagania z zadania:
 - [x] wczytywanie zadań z pliku JSON,
 - [x] zapis zadań do pliku JSON w tym samym formacie.
 
-Zmiany zapisują się w przeglądarce, więc zostają po odświeżeniu strony.
+## Czego nie ma w tej wersji
 
-## Czego nie zdążyliśmy zrobić
-
-- **Widok tygodnia w kalendarzu.** Działa widok miesiąca.
+- **Widok tygodnia w kalendarzu.** Dostępny jest widok miesiąca.
 - **Zdejmowanie kupionych rzeczy z pingwina.** Po zakupie zostają na nim na stałe.
-- **Tryb stada.** Chcieliśmy dodać wspólne nurkowania ze znajomymi, ale wymaga to kont i serwera.
+- **Tryb stada, czyli planowanie z innymi osobami.** Pomysł na kolejny etap, wymagałby kont użytkowników i serwera.
+- **Plan ataku, czyli rozkładanie nauki do kolokwium na kilka dni.** Funkcja powstała w trakcie prac, ale została usunięta z wersji końcowej, ponieważ wymagała zbyt dużo ręcznego ustawiania. Większy nacisk położono na regularność, czyli budowę igloo.
 
-Próbowaliśmy też zrobić plan rozkładający naukę na kilka dni. Wymagał zbyt wiele ręcznego ustawiania i niewiele dawał, więc go usunęliśmy i postawiliśmy na budowę igloo.
-
-## Co dodaliśmy od siebie i dlaczego
+## Własny wkład i uzasadnienie
 
 ### Pomoc w wyborze
 
@@ -57,7 +54,7 @@ Próbowaliśmy też zrobić plan rozkładający naukę na kilka dni. Wymagał zb
 
 Misje w widoku Dziś są wybierane na podstawie punktów za priorytet (wysoki 3, średni 2, niski 1) i pilność terminu (dziś 4, do 2 dni 3, do 7 dni 2, później 0).
 
-### Motywacja i nasza tożsamość
+### Motywacja i tożsamość drużyny
 
 | Funkcja | Co robi | Dlaczego |
 | --- | --- | --- |
