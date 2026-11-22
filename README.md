@@ -2,6 +2,8 @@
 
 Planner zadań dla studentów od drużyny **Pingwinki**, przygotowany na zadanie eliminacyjne SmartApp.
 
+**Otwórz aplikację:** https://jpolchowska.github.io/pingwinki-planner/
+
 Student jest pingwinem na misji. Aplikacja podpowiada, czym zająć się dziś, pilnuje terminów i nagradza skupioną pracę.
 
 To strona internetowa zaprojektowana jak aplikacja na telefon. Na komputerze wyświetla się w ramce telefonu, a na telefonie zajmuje cały ekran.
